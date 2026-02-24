@@ -1,0 +1,53 @@
+Common subdirectories: fcft-orig/.builds and fcft/.builds
+Common subdirectories: fcft-orig/3rd-party and fcft/3rd-party
+Common subdirectories: fcft-orig/doc and fcft/doc
+Common subdirectories: fcft-orig/example and fcft/example
+Common subdirectories: fcft-orig/fcft and fcft/fcft
+--- fcft-orig/fcft.c	2025-07-16 09:40:37.000000000 +0000
++++ fcft/fcft.c	2025-09-04 21:28:02.000000000 +0000
+@@ -6,9 +6,12 @@
+ #include <math.h>
+ #include <assert.h>
+ #include <threads.h>
+-#include <locale.h>
+ 
++// QNX
++#include <xlocale.h>
++#include <locale.h>
+ #include <wchar.h>  /* TODO: remove */
++#include <string.h>
+ 
+ #include <pthread.h>
+ 
+@@ -46,8 +49,12 @@
+  #include "3rd-party/freetype-rsvg/rsvg-port.h"
+ #endif
+ 
++#if !defined(min)
+ #define min(x, y) ((x) < (y) ? (x) : (y))
++#endif
++#if !defined(max)
+ #define max(x, y) ((x) > (y) ? (x) : (y))
++#endif
+ #define ALEN(v) (sizeof(v) / sizeof((v)[0]))
+ 
+ static FT_Library ft_lib = NULL;
+Common subdirectories: fcft-orig/nanosvg and fcft/nanosvg
+Only in fcft: output
+Common subdirectories: fcft-orig/subprojects and fcft/subprojects
+--- fcft-orig/svg-backend-nanosvg.c	2025-07-16 09:40:37.000000000 +0000
++++ fcft/svg-backend-nanosvg.c	2025-09-04 21:28:02.000000000 +0000
+@@ -11,8 +11,12 @@
+ #include <nanosvg/nanosvg.h>
+ #include <nanosvg/nanosvgrast.h>
+ 
++#if !defined(min)
+ #define min(x, y) ((x) < (y) ? (x) : (y))
++#endif
++#if !defined(max)
+ #define max(x, y) ((x) > (y) ? (x) : (y))
++#endif
+ 
+ struct state {
+     uint32_t cookie;  /* For debugging, to ensure the ‘generic’ field
+Common subdirectories: fcft-orig/unicode and fcft/unicode

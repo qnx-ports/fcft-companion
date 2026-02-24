@@ -1,0 +1,47 @@
+# Alpine-Maintainer: Alex McGrath <amk@amk.ie>
+# Maintainer: Aaron Bassett <abassett@qnx.com>
+pkgname=fcft
+pkgver=3.3.2
+pkgrel=0
+pkgdesc="Simple library for font loading and glyph rasterization using FontConfig, FreeType and pixman"
+url="https://codeberg.org/dnkl/fcft"
+license="MIT"
+arch="all"
+depends="fontconfig freetype harfbuzz pixman utf8proc liblocale-shim"
+depends_dev="fontconfig-dev freetype-dev harfbuzz-dev utf8proc-dev tllist-dev liblocale-shim-dev"
+makedepends="
+	meson
+	scdoc
+	$depends_dev
+	"
+checkdepends="check-dev font-dejavu font-noto-emoji" # tests require a font to be installed
+subpackages="$pkgname-dev $pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://codeberg.org/dnkl/fcft/archive/$pkgver.tar.gz
+    qnx-fix.patch
+"
+builddir="$srcdir/fcft"
+
+build() {
+	meson \
+		-Dprefix=/usr \
+		-Dsvg-backend=nanosvg \
+		-Dtest-text-shaping=true \
+		-Dc_args="-D_QNX_SOURCE -I/usr/include/shims" \
+		-Dc_link_args="-llocale -lgcc_s" \
+		. output
+	 ninja -C output
+}
+
+check() {
+	meson test --print-errorlogs -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+
+sha512sums="
+56f846586b28cddf7ffbfa51f84475696f68e2b8f2563a965d55031536995dc318a4f5debec2f8aa94c8b4e861a880d2a959479d98a1fe05ff381df80adb8555  fcft-3.3.2.tar.gz
+6ed0881536deab3cd727fcb3314238f379899b59c8ea0f84a050f9aab59aae5b5bc1dd70ba99af2c762f37f39875daf6454b225cd4b948b7f21acae07ec839f2  qnx-fix.patch
+"
